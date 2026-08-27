@@ -1,5 +1,27 @@
+import {
+ 
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+import PatientLayout from "./pages/patient/patientlayout";
+import Overview from "./pages/patient/overview";
+import CallHistory from "./pages/patient/CallHistory";
+import Alerts from "./pages/patient/Alerts";
+import Features from "./pages/patient/features";
+import CarePlan from "./pages/patient/CarePlan";
+import Documents from "./pages/patient/document";
+
+
+
+
+
+
+
 import { useState } from 'react'
 import type { ReactNode } from 'react'
+import { BrowserRouter, useNavigate, useLocation } from 'react-router-dom' 
 
 import {
   Menu,
@@ -27,8 +49,7 @@ import {
 
 function Header({ onMenuClick }: { onMenuClick: () => void }) {
   return (
- <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6">
-
+<header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6">
   {/* LEFT - Menu + Logo + Title */}
   <div className="flex items-center gap-3">
 
@@ -285,7 +306,7 @@ function PatientDetail({
         <InfoItem
           icon={<FileText size={13} />}
           title="Care Plan"
-          value={data.carePlan}
+         value="Standard"
         />
 
         <InfoItem
@@ -596,12 +617,16 @@ function FeatureRow({
     </tr>
   )
 }
+ 
 
-function App() {
+function Dashboard() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
-   return (
+
+  const navigate = useNavigate()
+
+  return (
     <div className="flex min-h-screen bg-gray-100">
 
       {/* SIDEBAR */}
@@ -1642,87 +1667,87 @@ function App() {
 
 {/* ================= BOTTOM NAVIGATION ================= */}
 
+{/* ================= BOTTOM NAVIGATION ================= */}
+
 <div className="mt-3 rounded-lg border border-gray-200 bg-white shadow-sm">
 
   <div className="flex items-center justify-between px-6">
 
     {/* OVERVIEW */}
-
-    <button className="relative flex items-center gap-2 px-3 py-3 text-[9px] font-medium text-green-700">
-
+    <button
+      onClick={() => navigate("/patient/AI-AD300072/overview")}
+      className="flex items-center gap-2 px-3 py-3 text-[9px] font-medium text-green-700 hover:text-green-800"
+    >
       <Activity size={13} />
 
       <span>
         Overview
       </span>
-
-      <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-green-700" />
-
     </button>
 
 
     {/* CALL HISTORY */}
-
-    <button className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-gray-700">
-
+    <button
+      onClick={() => navigate("/patient/AI-AD300072/calls")}
+      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700"
+    >
       <Phone size={13} />
 
       <span>
         Call History
       </span>
-
     </button>
 
 
     {/* ALERTS */}
-
-    <button className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-gray-700">
-
+    <button
+      onClick={() => navigate("/patient/AI-AD300072/alerts")}
+      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700"
+    >
       <Bell size={13} />
 
       <span>
         Alerts
       </span>
-
     </button>
 
 
     {/* FEATURES */}
-
-    <button className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-gray-700">
-
+    <button
+      onClick={() => navigate("/patient/AI-AD300072/features")}
+      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700"
+    >
       <Activity size={13} />
 
       <span>
         Features
       </span>
-
     </button>
 
 
     {/* CARE PLAN */}
-
-    <button className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-gray-700">
-
+    <button
+      onClick={() => navigate("/patient/AI-AD300072/care-plan")}
+      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700"
+    >
       <FileText size={13} />
 
       <span>
         Care Plan
       </span>
-
     </button>
 
 
     {/* DOCUMENTS */}
-
-    <button className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-gray-700">
-
+    <button
+      onClick={() => navigate("/patient/AI-AD300072/documents")}
+      className="flex items-center gap-2 px-3 py-3 text-[9px] text-gray-500 hover:text-green-700"
+    >
       <FileText size={13} />
 
       <span>
         Documents
       </span>
-
     </button>
 
   </div>
@@ -1750,4 +1775,60 @@ function App() {
   )
 }
 
-export default App
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+
+        {/* Existing Dashboard */}
+        <Route
+          path="/"
+          element={<Dashboard />}
+        />
+
+        {/* Patient Details */}
+        <Route
+          path="/patient/:patientId"
+          element={<PatientLayout />}
+        >
+          <Route
+            index
+            element={<Navigate to="overview" replace />}
+          />
+
+          <Route
+            path="overview"
+            element={<Overview />}
+          />
+
+          <Route
+            path="calls"
+            element={<CallHistory />}
+          />
+
+          <Route
+            path="alerts"
+            element={<Alerts />}
+          />
+
+          <Route
+            path="features"
+            element={<Features />}
+          />
+
+          <Route
+            path="care-plan"
+            element={<CarePlan />}
+          />
+
+          <Route
+            path="documents"
+            element={<Documents />}
+          />
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
+  );
+}
+export default App;
